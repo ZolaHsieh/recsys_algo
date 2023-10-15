@@ -25,8 +25,10 @@ data.to_csv('data/new_rating.csv', index=False)
 
 ## create smaller dataset
 # number of users and movies we would like to keep
-n = 10000
-m = 2000
+# n = 10000
+# m = 2000
+n = 1000
+m = 200
 
 user_cntr = Counter(data.userId)
 most_often_user = [u for u, _ in user_cntr.most_common(n)]
