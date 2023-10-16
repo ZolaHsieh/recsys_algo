@@ -16,7 +16,7 @@ python data_preprocess.py
 python data_preprocess.py -n 5000 -m 300
 ```
 * training and run collaborative filtering recommendation
-```
+```shell
 python item_based_cf.py #item-based cf
 python usr_based_cf.py  #user-based cf
 ```
