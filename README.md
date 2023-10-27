@@ -21,17 +21,18 @@ python item_based_cf.py #item-based cf
 python usr_based_cf.py  #user-based cf
 ```
 
-#### result for 1000 users & 200 movies (train:80%, test:20%)
+#### result for 5000 users & 300 movies (train:80%, test:20%)
 * User-based cf
 
-| Dataset | MSE | Precision | Recall |
-|  ----  | ----  | ----  | ----  |
-| trianing set | 1.29 | - | - |
-| test set  | 1.30 | 0.97 | 0.55 |
+| Dataset | MSE | Precision| Full Precision | Recall |
+|  ----  | ----  | ----  | ----  | ---- |
+| trianing set | 1.11| - | - | - |
+| test set  | 1.12 | 0.56 | 0.19 | 0.87 |
 
 * Item-based cf
 
-| Dataset | MSE | Precision | Recall |
-|  ----  | ----  | ----  | ----  |
-| trianing set | 0.93 | - | - |
-| test set  | 0.93 | 0.99 | 0.54 |
+| Dataset | MSE | Precision| Full Precision | Recall |
+|  ----  | ----  | ----  | ----  | ---- |
+| trianing set | 0.93 | - | - | - |
+| test set  | 0.94 | 0.52 | 0.17  | 0.98 |
+ 

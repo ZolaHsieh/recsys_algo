@@ -23,6 +23,7 @@ def mse(p, t):
 
 def evaluation(usr_list, test_like, test_dislike, recommend_list):
     precision = []
+    full_precision = []
     recall = []
     for usr in usr_list:
         rec = set(recommend_list[usr])
@@ -33,8 +34,13 @@ def evaluation(usr_list, test_like, test_dislike, recommend_list):
         FP = len( rec & dislike )
         
         p = TP / (TP + FP) if TP + FP > 0 else np.nan
+        fp = TP / len(rec) if len(rec)> 0 else np.nan
         r = TP / len(like) if len(like) > 0 else np.nan
 
-        recall.append(p)
-        precision.append(r)
-    print(f"precision: {np.nanmean(precision):.4f}, recall: {np.nanmean(recall):.4f}")
+        recall.append(r)
+        precision.append(p)
+        full_precision.append(fp)
+
+    print(f"precision: {np.nanmean(precision):.4f}, \
+          full precision: {np.nanmean(full_precision):.4f}, \
+          recall: {np.nanmean(recall):.4f}")
