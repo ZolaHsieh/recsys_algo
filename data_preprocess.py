@@ -6,8 +6,7 @@ def reindex_id(df, col: str):
     id_list = list(df[col].unique())
     cnt = [i for i in range(len(id_list))]
     mapp = dict(zip(id_list, cnt))
-    print(f'reindex: {len(cnt)}')
-    return df[col].map(mapp)
+    return mapp
 
 def create_small_ratings(usr_num, movie_num, rating_data):
 
@@ -68,12 +67,18 @@ if __name__ == '__main__':
     
 
     ## movie data preprocess
+    movie2idx = reindex_id(movie_data, 'movie_id')
+    movie_data['new_movie_id'] = movie_data.movie_id.map(movie2idx)
+
     one_hot_genres = movie_data.genres.str.strip().str.get_dummies(sep = '|')
     movie_data = pd.concat([movie_data, one_hot_genres], axis=1)
     print(f'procressed movie:{movie_data.shape}')
     movie_data.to_csv('data/procressed_movie.csv', index=False)
     
     ## usr data preprocess
+    usr2idx = reindex_id(usr_data, 'user_id')
+    usr_data['new_user_id'] = usr_data.user_id.map(usr2idx)
+
     usr_data.gender = usr_data.gender.map({'F':0, 'M':1})
     usr_data.age = usr_data.age // 10
     usr_data = pd.get_dummies(usr_data,prefix=['occupation'], 
@@ -84,4 +89,7 @@ if __name__ == '__main__':
     usr_data.to_csv('data/procressed_usr.csv', index=False)
 
     ## create smaller dataset
+    rating_data['new_user_id'] = rating_data.user_id.map(usr2idx)
+    rating_data['new_movie_id'] = rating_data.movie_id.map(movie2idx)
+    rating_data.to_csv('data/procressed_rating.csv', index=False)
     create_small_ratings(args.usr_num, args.moive_num, rating_data)
