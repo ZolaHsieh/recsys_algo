@@ -71,7 +71,7 @@ if __name__ == '__main__':
     one_hot_genres = movie_data.genres.str.strip().str.get_dummies(sep = '|')
     movie_data = pd.concat([movie_data, one_hot_genres], axis=1)
     print(f'procressed movie:{movie_data.shape}')
-    movie_data.to('data/procressed_movie.csv', index=False)
+    movie_data.to_csv('data/procressed_movie.csv', index=False)
     
     ## usr data preprocess
     usr_data.gender = usr_data.gender.map({'F':0, 'M':1})
@@ -81,7 +81,7 @@ if __name__ == '__main__':
                               drop_first=True, 
                               dtype=int)
     print(f'procressed usr:{usr_data.shape}')
-    usr_data.to('data/procressed_usr.csv', index=False)
+    usr_data.to_csv('data/procressed_usr.csv', index=False)
 
     ## create smaller dataset
-    create_small_ratings(args.usr_num, args.moive_num, rating_data, movie_data, usr_data)
+    create_small_ratings(args.usr_num, args.moive_num, rating_data)
