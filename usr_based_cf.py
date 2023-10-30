@@ -92,7 +92,12 @@ if __name__ == '__main__':
     if args.sample:
         data = pd.read_csv('data/small_rating.csv')
     else: 
-        data = pd.read_csv('data/new_rating.csv')
+        data = pd.read_table('data/ratings.dat', 
+                             sep='::',
+                             header = None,
+                             names=['user_id', 'movie_id', 'rating', 'timestamp'],
+                             engine='python').drop('timestamp', axis =1)
+        
     print(f"sample:{args.sample}, data: {data.shape}")
     
     ## train / test split
@@ -103,8 +108,8 @@ if __name__ == '__main__':
 
     ## get user-item-rate dataset
     print("=== create user-item-rate data set")
-    train_dict = dict_set(train, key='userId', pair1='movieId', rate='rating')
-    test_dict = dict_set(test, key='userId', pair1='movieId', rate='rating')
+    train_dict = dict_set(train, key='user_id', pair1='movie_id', rate='rating')
+    test_dict = dict_set(test, key='user_id', pair1='movie_id', rate='rating')
 
     ## create like, dislike list
     train_like, _ = get_like_dislike(train_dict)
@@ -113,12 +118,12 @@ if __name__ == '__main__':
 
     ## training: cal similarity(weight), avg, dev
     print("=== training")
-    neighbors, devs, avgs = training(train_dict)
+    neighbors, devs, avgs = training(train_dict, k=20) # consdier 20 neighbors
     print(f"size: neighbors: {len(neighbors)}, devs: {len(devs)}, avgs:{len(avgs)}")
     
     ## predict
     print("=== predict rating")
-    pre_train, tar_train = predict_rate(train_dict, neighbors, devs, avgs, limit=5)
+    pre_train, tar_train = predict_rate(train_dict, neighbors, devs, avgs, limit=5) # if neighbor# < limit, use avg
     print('train mse:', mse(pre_train, tar_train))
     
     pre_test, tar_test = predict_rate(test_dict, neighbors, devs, avgs, limit=5)

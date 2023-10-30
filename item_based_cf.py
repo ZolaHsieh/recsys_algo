@@ -93,15 +93,20 @@ def gen_recommend(data_set, neighbors):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument("-s", dest="sample", help="use smaller data set or not", type=bool, default=True)
+    parser.add_argument("-a", dest="all_data", help="use all data set or no", action="store_true") #default=False
     args = parser.parse_args()
     
     ## load data
-    if args.sample:
+    if not args.all_data:
         data = pd.read_csv('data/small_rating.csv')
     else: 
-        data = pd.read_csv('data/new_rating.csv')
-    print(f"sample:{args.sample}, data: {data.shape}")
+        data = pd.read_table('data/ratings.dat', 
+                             sep='::',
+                             header = None,
+                             names=['user_id', 'movie_id', 'rating', 'timestamp'],
+                             engine='python').drop('timestamp', axis =1)
+        
+    print(f"sample:{not args.all_data}, data: {data.shape}")
     
     ## train / test split
     print("=== train, test split")
@@ -110,8 +115,8 @@ if __name__ == '__main__':
 
     ## get item-usr-rate dataset
     print("=== create item-usr-rate data set")
-    train_dict = dict_set(train, key='movieId', pair1='userId', rate='rating')
-    test_dict = dict_set(test, key='movieId', pair1='userId', rate='rating')
+    train_dict = dict_set(train, key='movie_id', pair1='user_id', rate='rating')
+    test_dict = dict_set(test, key='movie_id', pair1='user_id', rate='rating')
 
     ## create like, dislike list
     train_like, _ = get_like_dislike(train_dict)
@@ -119,7 +124,7 @@ if __name__ == '__main__':
 
     ## training: cal similarity(weight), avg, dev
     print("=== training")
-    neighbors, devs, avgs = training(train_dict)
+    neighbors, devs, avgs = training(train_dict, k=20) # consdier 20 neighbors
     print(f"size: neighbors: {len(neighbors)}, devs: {len(devs)}, avgs:{len(avgs)}")
     
     ## predict
