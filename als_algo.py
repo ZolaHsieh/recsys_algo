@@ -20,8 +20,6 @@ class ALS(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, usr, movie):
-        print('forrrrr', usr.size(), usr.dtype)
-        print(usr)
         usr =  self.usr_emd(usr)
         movie =  self.movie_emd(movie)
         mx = torch.sum(usr*movie, axis=1)
@@ -29,17 +27,20 @@ class ALS(nn.Module):
 
 
 class Dataset(torch.utils.data.Dataset):
-    def __init__(self, dataframe):
-        self.dataframe = dataframe
+    def __init__(self, df):
+
+        self.user = torch.tensor(df['new_user_id'].values)
+        self.movie = torch.tensor(df['new_movie_id'].values)
+        self.rating = torch.tensor(df['rating'].values, dtype=torch.float32)
+ 
 
     def __len__(self):
-        return len(self.dataframe)
+        return len(self.rating)
 
-    def __getitem__(self, index):
-        row = self.dataframe.iloc[index]
-        return (row["new_user_id"],
-                row["new_movie_id"],
-                row["class"])
+    def __getitem__(self, idx):
+        return (self.user[idx], 
+                self.movie[idx],
+                self.rating[idx])
     
 
 def training(model, train_dataloader, test_dataloader, loss_fn, optimizer, epochs=10):
@@ -56,7 +57,7 @@ def training(model, train_dataloader, test_dataloader, loss_fn, optimizer, epoch
             train_loss.append(loss.item())
 
             optimizer.zero_grad()
-            loss.backword()
+            loss.backward()
             optimizer.step()
         
         model.eval()
@@ -93,7 +94,7 @@ if __name__ == '__main__':
     print("=== train, test split")
     train, test= train_test_split(data, test_size=0.2, random_state=1126)
     print(f"train:{train.shape}, test:{test.shape}")
-    print(Dataset(train)[0])
+    # print(Dataset(train)[0])
     
     ## dataloader
     train_dataloader = DataLoader(Dataset(train), 
