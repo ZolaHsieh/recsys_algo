@@ -20,6 +20,8 @@ class ALS(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, usr, movie):
+        print('forrrrr', usr.size(), usr.dtype)
+        print(usr)
         usr =  self.usr_emd(usr)
         movie =  self.movie_emd(movie)
         mx = torch.sum(usr*movie, axis=1)
@@ -35,8 +37,8 @@ class Dataset(torch.utils.data.Dataset):
 
     def __getitem__(self, index):
         row = self.dataframe.iloc[index]
-        return (row["user_id"],
-                row["movie_id"],
+        return (row["new_user_id"],
+                row["new_movie_id"],
                 row["class"])
     
 
@@ -48,8 +50,7 @@ def training(model, train_dataloader, test_dataloader, loss_fn, optimizer, epoch
         
         model.train()
         for _, (u, m, y) in enumerate(train_dataloader):
-            print(len(u))
-            print(len(m))
+
             y_pred = model(u, m)
             loss = loss_fn(y_pred, y)
             train_loss.append(loss.item())
@@ -79,12 +80,8 @@ if __name__ == '__main__':
     ## load data 
     if args.sample:
         data = pd.read_csv('data/small_rating.csv')
-    else: 
-        data = pd.read_table('data/ratings.dat', 
-                             sep='::',
-                             header = None,
-                             names=['user_id', 'movie_id', 'rating', 'timestamp'],
-                             engine='python').drop('timestamp', axis =1)
+    else:
+        data = pd.read_csv('data/procressed_rating.csv')
         
     print(f"sample:{args.sample}, data: {data.shape}")
     
@@ -96,7 +93,7 @@ if __name__ == '__main__':
     print("=== train, test split")
     train, test= train_test_split(data, test_size=0.2, random_state=1126)
     print(f"train:{train.shape}, test:{test.shape}")
-    # print(Dataset(train)[0])
+    print(Dataset(train)[0])
     
     ## dataloader
     train_dataloader = DataLoader(Dataset(train), 

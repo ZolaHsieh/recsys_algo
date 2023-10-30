@@ -100,11 +100,7 @@ if __name__ == '__main__':
     if not args.all_data:
         data = pd.read_csv('data/small_rating.csv')
     else: 
-        data = pd.read_table('data/ratings.dat', 
-                             sep='::',
-                             header = None,
-                             names=['user_id', 'movie_id', 'rating', 'timestamp'],
-                             engine='python').drop('timestamp', axis =1)
+        data = pd.read_csv('data/procressed_rating.csv')
         
     print(f"sample:{not args.all_data}, data: {data.shape}")
     
