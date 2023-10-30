@@ -9,7 +9,7 @@ def reindex_id(df, col: str):
     print(f'reindex: {len(cnt)}')
     return df[col].map(mapp)
 
-def create_small_ratings(usr_num, movie_num):
+def create_small_ratings(usr_num, movie_num, rating_data):
 
     print(f"create smaller dataset: usr_num={usr_num}, moive_num={movie_num}")
 
@@ -19,13 +19,14 @@ def create_small_ratings(usr_num, movie_num):
     movie_cntr = Counter(rating_data.movie_id)
     most_often_movie = [m for m, _ in movie_cntr.most_common(movie_num)]
 
-    smaller_data = rating_data[rating_data.user_id.isin(most_often_user) & \
+    smaller_rating = rating_data[rating_data.user_id.isin(most_often_user) & \
                                rating_data.movie_id.isin(most_often_movie)].reset_index(drop=True)
-    print('dataset: ',rating_data.shape,' -> ' , smaller_data.shape)
-    # print(smaller_data.head())
+
+    print('rating dataset: ',rating_data.shape,' -> ' , smaller_rating.shape)
 
     ## to _csv
-    smaller_data.to_csv('data/small_rating.csv', index=False)
+    smaller_rating.to_csv('data/small_rating.csv', index=False)
+
 
 if __name__ == '__main__':
     parser = ArgumentParser()
@@ -66,8 +67,21 @@ if __name__ == '__main__':
     # print(usr_data.head())
     
 
-    ## rating: create smaller dataset
-    create_small_ratings(args.usr_num, args.moive_num)
-
     ## movie data preprocess
+    one_hot_genres = movie_data.genres.str.strip().str.get_dummies(sep = '|')
+    movie_data = pd.concat([movie_data, one_hot_genres], axis=1)
+    print(f'procressed movie:{movie_data.shape}')
+    movie_data.to('data/procressed_movie.csv', index=False)
     
+    ## usr data preprocess
+    usr_data.gender = usr_data.gender.map({'F':0, 'M':1})
+    usr_data.age = usr_data.age // 10
+    usr_data = pd.get_dummies(usr_data,prefix=['occupation'], 
+                              columns = ['occupation'], 
+                              drop_first=True, 
+                              dtype=int)
+    print(f'procressed usr:{usr_data.shape}')
+    usr_data.to('data/procressed_usr.csv', index=False)
+
+    ## create smaller dataset
+    create_small_ratings(args.usr_num, args.moive_num, rating_data, movie_data, usr_data)

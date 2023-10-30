@@ -1,19 +1,18 @@
 # recsys_algo
-Recommender system algorithm
+Implement different kinds of recommender system algorithm
 
 ## Dataset: [MovieLens 1M Dataset](https://grouplens.org/datasets/movielens/)
 * download dataset and unzip to `data/`
-* data preprocess: create smaller dataset
+* data preprocess: create smaller dataset (default 1000 users & 200 movies)
 ```shell
+python data_preprocess.py 
+
 ## use -n, -m to change sampling users#(-n) or movies#(-m)
-## default 1000 users & 200 movies
 python data_preprocess.py -n 5000 -m 300
 ```
 
 ## Collaborative Filtering
 Implement collaborative filtering recommendation method and evaluate rating estimation(MSE) and recommendation(precision, recall)
-#### command
-
 * training and run collaborative filtering recommendation
 ```shell
 # use -a flag for traing & predict for all data
