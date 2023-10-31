@@ -74,16 +74,14 @@ python lr_ploy_fm.py -a
 | trianing set | 0.60 | 0.70 | 0.70 | 0.96 | 
 | test set  | 0.60 | 0.70 | 0.71 | 0.97 |
 
-* Traditional FM
-FM is a modified method of Poly2 by applying matrix multiplication to reduce time complexity.
+* Traditional FM: FM is a modified method of Poly2 by applying matrix multiplication to reduce time complexity.
 
 | Dataset | Loss | Accuracy | Precision | Recall |
 |  ----  | ----  | ---- | ----  | ----  |
 | trianing set | 0.60 | 0.70 | 0.70 | 0.97 | 
 | test set  | 0.60 | 0.70 | 0.71 | 0.96 |
 
-* Embedding FM (embedding dim = 128)
-Use embedding to represent one-hot X(item & user feats.) * v(implicit weight vector for x) 
+* Embedding FM (embedding dim = 128): Use embedding to represent one-hot X(item & user feats.) * v(implicit weight vector for x) 
 
 | Dataset | Loss | Accuracy | Precision | Recall |
 |  ----  | ----  | ---- | ----  | ----  |
