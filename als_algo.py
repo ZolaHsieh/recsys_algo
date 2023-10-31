@@ -1,11 +1,10 @@
-from sklearn.metrics import precision_score,recall_score,accuracy_score
-from torch.utils.data import DataLoader
 from sklearn.model_selection import train_test_split
+from torch.utils.data import DataLoader
 from argparse import ArgumentParser
+from utils import eval
 from torch import nn, optim
 from tqdm import tqdm
 import pandas as pd
-import numpy as np
 import torch
 
 class ALS(nn.Module):
@@ -40,18 +39,7 @@ class Dataset(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         return (self.user[idx], self.movie[idx], self.rating[idx])
     
-
-def eval(y_true, y_pred):
-
-    y_pred = torch.round(torch.sigmoid(y_pred)).detach().numpy()
-    y_true = y_true.detach().numpy()
-
-    p = precision_score(y_true, y_pred)
-    r = recall_score(y_true, y_pred)
-    acc = accuracy_score(y_true,y_pred)
-    return p, r, acc
-
-
+# torch model training & eval
 def training(model, train_dataloader, test_dataloader, loss_fn, optimizer, epochs=10):
     
     train_losses = []
@@ -104,7 +92,6 @@ def training(model, train_dataloader, test_dataloader, loss_fn, optimizer, epoch
               f"| test_loss:{test_losses[-1]:.4f}, acc:{test_acc:.4f}, precision:{test_p:.4f}, recall:{test_r:.4f}")
 
     return model, train_loss, test_loss
-
 
 if __name__ == '__main__':
 

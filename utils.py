@@ -1,6 +1,8 @@
+import torch
 import numpy as np
 from tqdm import tqdm
 from collections import defaultdict
+from sklearn.metrics import precision_score,recall_score,accuracy_score
 
 def dict_set(df, key, pair1, rate):
     result = defaultdict(dict)
@@ -20,7 +22,7 @@ def mse(p, t):
   t = np.array(t)
   return np.mean((p - t)**2)
 
-
+## recommendation list eval
 def evaluation(usr_list, test_like, test_dislike, recommend_list):
     precision = []
     full_precision = []
@@ -44,3 +46,14 @@ def evaluation(usr_list, test_like, test_dislike, recommend_list):
     print(f"precision: {np.nanmean(precision):.4f}, \
           full precision: {np.nanmean(full_precision):.4f}, \
           recall: {np.nanmean(recall):.4f}")
+
+## usr like or not clf eval
+def eval(y_true, y_pred):
+
+    y_pred = torch.round(torch.sigmoid(y_pred)).detach().numpy()
+    y_true = y_true.detach().numpy()
+
+    p = precision_score(y_true, y_pred)
+    r = recall_score(y_true, y_pred)
+    acc = accuracy_score(y_true,y_pred)
+    return p, r, acc

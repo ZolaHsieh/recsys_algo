@@ -48,3 +48,44 @@ python als_algo.py -a
 |  ----  | ----  | ---- | ----  | ----  |
 | trianing set | 0.57 | 0.73 | 0.74 | 0.83 | 
 | test set  | 0.58 | 0.73 | 0.73 | 0.82 |
+
+## Collaborative Filtering with Users & Items Features
+Implement Logistic Regression, Poly2(Degree-2 Ploynomial Margin) and FM (Factorization Machines) to predict whether or not item would be like.
+* like: rating 4~5
+* dislike: rating 1~3
+```shell
+# -a: flag for traing & predict for all data
+# -e: model training epochs(default:5)
+# -m: model stype ("lr": logistic regression, "poly":poly2, "fm1": Traditional FM, "fm2": Embedding FM)
+python lr_ploy_fm.py -a
+```
+#### Result (train:80%, test:20%)
+* Logistic Regression
+
+| Dataset | Loss | Accuracy | Precision | Recall |
+|  ----  | ----  | ---- | ----  | ----  |
+| trianing set | 0.61 | 0.69 | 0.69 | 0.99 | 
+| test set  | 0.61 | 0.69 | 0.69 | 0.99 |
+
+* Poly2
+
+| Dataset | Loss | Accuracy | Precision | Recall |
+|  ----  | ----  | ---- | ----  | ----  |
+| trianing set | 0.60 | 0.70 | 0.70 | 0.96 | 
+| test set  | 0.60 | 0.70 | 0.71 | 0.97 |
+
+* Traditional FM
+FM is a modified method of Poly2 by applying matrix multiplication to reduce time complexity.
+
+| Dataset | Loss | Accuracy | Precision | Recall |
+|  ----  | ----  | ---- | ----  | ----  |
+| trianing set | 0.60 | 0.70 | 0.70 | 0.97 | 
+| test set  | 0.60 | 0.70 | 0.71 | 0.96 |
+
+* Embedding FM (embedding dim = 128)
+Use embedding to represent one-hot X(item & user feats.) * v(implicit weight vector for x) 
+
+| Dataset | Loss | Accuracy | Precision | Recall |
+|  ----  | ----  | ---- | ----  | ----  |
+| trianing set | 0.62 | 0.69 | 0.69 | 1.00 | 
+| test set  | 0.61 | 0.69 | 0.69 | 1.00 |
