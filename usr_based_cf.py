@@ -85,16 +85,16 @@ def gen_recommend(data_set, neighbors, train_like):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument("-s", dest="sample", help="use smaller data set or not", type=bool, default=True)
+    parser.add_argument("-a", dest="all_data", help="use all data set or no", action="store_true") #default=False
     args = parser.parse_args()
     
-    ## load data 
-    if args.sample:
+    ## load data
+    if not args.all_data:
         data = pd.read_csv('data/small_rating.csv')
     else: 
         data = pd.read_csv('data/procressed_rating.csv')
         
-    print(f"sample:{args.sample}, data: {data.shape}")
+    print(f"sample:{not args.all_data}, data: {data.shape}")
     
     ## train / test split
     print("=== train, test split")

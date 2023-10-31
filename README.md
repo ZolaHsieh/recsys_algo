@@ -11,16 +11,15 @@ python data_preprocess.py
 python data_preprocess.py -n 5000 -m 300
 ```
 
-## Collaborative Filtering
-Implement collaborative filtering recommendation method and evaluate rating estimation(MSE) and recommendation(precision, recall)
-* training and run collaborative filtering recommendation
+## Collaborative Filtering by K-Nearest Neighber
+Implement collaborative filtering(cf) recommendation by k-nearest neighber method.
 ```shell
 # use -a flag for traing & predict for all data
 python item_based_cf.py #item-based cf
 python usr_based_cf.py  #user-based cf
 ```
-
-#### result for 5000 users & 300 movies (train:80%, test:20%, k=20)
+#### result for 5000 users & 300 movies (train:80%, test:20%)
+Calculate k = 20 nearest(most similiar) neighbor to do score estimatnio and recommendation. 
 * User-based cf
 
 | Dataset | MSE | Precision| Recall |
@@ -35,3 +34,17 @@ python usr_based_cf.py  #user-based cf
 | trianing set | 1.28 | - | - | 
 | test set  | 1.28 | 0.69 | 0.79 |
  
+## Collaborative Filtering by Matrix Factorization
+Implement one of matrix factorization method - ALS (Alternating Least Squares) to decomposes the user-item interaction matrix into user and item feature matrices and predict whether or not item would be like.
+* like: rating 4~5
+* dislike: rating 1~3
+```shell
+# use -a flag for traing & predict for all data
+python als_algo.py -a
+```
+#### Result (train:80%, test:20%)
+
+| Dataset | Loss | Accuracy | Precision | Recall |
+|  ----  | ----  | ---- | ----  | ----  |
+| trianing set | 0.57 | 0.73 | 0.74 | 0.83 | 
+| test set  | 0.58 | 0.73 | 0.73 | 0.82 |
